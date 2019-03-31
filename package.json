@@ -22,7 +22,7 @@
     "lint-css:fix": "stylelint \"src/**/*.css\" --fix",
     "lint-ts": "tslint \"src/**/*.{ts,tsx}\"",
     "lint-ts:fix": "tslint \"src/**/*.{ts,tsx}\" --fix",
-    "lint": "yarn lint-css -q ; yarn lint-ts --quiet",
+    "lint": ". ./scripts/lint.sh",
     "lint:fix": "yarn lint-css:fix ; yarn lint-ts:fix"
   },
   "browserslist": [
