@@ -1,0 +1,35 @@
+{
+  "rulesDirectory": [
+    "tslint-plugin-prettier"
+  ],
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-react-hooks",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    // prettier
+    "prettier": [
+      true,
+      {
+        "singleQuote": true,
+        "jsxSingleQuote": true,
+        "tabWidth": 4,
+        "printWidth": 120
+      }
+    ],
+    // react hooks
+    "react-hooks-nesting": "error",
+    // tslint rules
+    "no-empty-interface": {
+      "severity": "warn"
+    },
+    "interface-name": false,
+    "member-access": false,
+    "object-literal-sort-keys": false,
+    "no-console": {
+      "severity": "warn"
+    }
+  }
+}
