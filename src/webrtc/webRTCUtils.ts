@@ -15,20 +15,19 @@ export function stringifyOffer(offer: RTCSessionDescriptionInit): string {
     return JSON.stringify(offer);
 }
 
-export function deStringifyOffer(offer: string): RTCSessionDescriptionInit {
+export function deStringifyOffer(offer: string): RTCSessionDescription {
     const result = JSON.parse(offer) as unknown;
     if (!isRTCSessionDescriptionInit(result)) {
         throw new Error('Did not get a RTCSessionDescriptionInit object. Are you sure you passed in the right string?');
     }
-    return result;
+    return new RTCSessionDescription(result);
 }
 
 export function createSessionDescription(sdpOffer: RTCSessionDescriptionInit) {
     return new RTCSessionDescription(sdpOffer);
 }
 
-function isRTCSessionDescriptionInit(result: unknown): result is RTCSessionDescriptionInit {
-    console.log(result);
+export function isRTCSessionDescriptionInit(result: unknown): result is RTCSessionDescriptionInit {
     // TODO: Add a suitable check here
-    return true;
+    return !!result;
 }

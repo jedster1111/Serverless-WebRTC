@@ -30,6 +30,10 @@
     "object-literal-sort-keys": false,
     "no-console": {
       "severity": "warn"
-    }
+    },
+    "no-unused-variable": {
+      "severity": "warn"
+    },
+    "no-unused-expression": false
   }
 }
