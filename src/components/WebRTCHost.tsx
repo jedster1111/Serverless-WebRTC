@@ -3,10 +3,10 @@ import { createOffer } from '../webrtc/createOffer';
 import { handleNewICECandidate } from '../webrtc/handleNewICECandidate';
 import { setLocalDescription } from '../webrtc/setLocalDescription';
 import { setRemoteDescription } from '../webrtc/setRemoteDescription';
-import { createWebRTCCPeerConnection, deStringifyOffer } from '../webrtc/webRTCUtils';
+import { createWebRtcPeerConnection, deStringifyOffer } from '../webrtc/webRTCUtils';
 
 export const WebRTCHost: FC = () => {
-    const [connection] = useState<RTCPeerConnection>(createWebRTCCPeerConnection());
+    const [connection] = useState<RTCPeerConnection>(createWebRtcPeerConnection());
     const [isGatheringICECandidates, setIsGatheringICECandidates] = useState(true);
     const [candidates, setCandidates] = useState<RTCIceCandidate[]>([]);
     const [latestOffer, setOffer] = useState<RTCSessionDescriptionInit>();
@@ -45,9 +45,9 @@ export const WebRTCHost: FC = () => {
     const handleSendMessageClick = () => {
         const chatChannel = chatChannelRef.current;
         if (!chatChannel) {
-            console.log("No chat channel yet, are you sure you're connectd?");
+            console.log("No chat channel yet, are you sure you're connected?");
         } else {
-            chatChannel.send('Hello world!');
+            chatChannel.send('Hello world, from host!');
         }
     };
     const handleAnswerInputChange = (e: ChangeEvent<HTMLInputElement>) => setAnswerInputValue(e.target.value);

@@ -1,6 +1,6 @@
 // See https://mdn.mozillademos.org/files/12363/WebRTC%20-%20Signaling%20Diagram.svg for a good diagram explaining flow
 
-export function createWebRTCCPeerConnection() {
+export function createWebRtcPeerConnection() {
     return new RTCPeerConnection({
         iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
         iceCandidatePoolSize: 6

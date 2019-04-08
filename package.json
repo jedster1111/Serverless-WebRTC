@@ -17,6 +17,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:ci": "yarn test --no-watch",
     "eject": "react-scripts eject",
     "lint-css": "stylelint \"src/**/*.css\"",
     "lint-css:fix": "stylelint \"src/**/*.css\" --fix",

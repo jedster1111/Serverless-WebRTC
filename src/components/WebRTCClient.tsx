@@ -3,12 +3,11 @@ import { createAnswer } from '../webrtc/createAnswer';
 import { handleNewICECandidate } from '../webrtc/handleNewICECandidate';
 import { setLocalDescription } from '../webrtc/setLocalDescription';
 import { setRemoteDescription } from '../webrtc/setRemoteDescription';
-import { createWebRTCCPeerConnection, deStringifyOffer } from '../webrtc/webRTCUtils';
+import { createWebRtcPeerConnection, deStringifyOffer } from '../webrtc/webRTCUtils';
 
 export const WebRTCClient: FC = () => {
-    const [connection] = useState<RTCPeerConnection>(createWebRTCCPeerConnection());
+    const [connection] = useState<RTCPeerConnection>(createWebRtcPeerConnection());
     const [offerInputValue, setOfferInputValue] = useState<string>('');
-    // const [offer, setOffer] = useState<RTCSessionDescriptionInit>();
     const offerRef = useRef<RTCSessionDescriptionInit>();
     const [isGatheringICECandidates, setIsGatheringICECandidates] = useState(true);
     const [candidates, setCandidates] = useState<RTCIceCandidate[]>([]);
@@ -49,7 +48,6 @@ export const WebRTCClient: FC = () => {
             throw new Error('There was no sdp string in received offer?');
         }
 
-        // setOffer(receivedOffer);
         offerRef.current = receivedOffer;
 
         console.log(`[WebRTCClient]: Set remote description`);
