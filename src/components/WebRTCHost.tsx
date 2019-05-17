@@ -36,7 +36,7 @@ export const WebRTCHost: FC = () => {
         );
         connection.addEventListener('icegatheringstatechange', () => handleGatheringStateChange(connection, setOffer));
         connection.addEventListener('signalingstatechange', () => {
-            console.log(`[WebRTCClient]: Set signalling state set to - ${connection.signalingState}`);
+            console.log(`[WebRTCHost]: Set signalling state set to - ${connection.signalingState}`);
         });
 
         setUpWebRTC();
