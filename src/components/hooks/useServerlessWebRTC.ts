@@ -14,14 +14,24 @@ export function useServerlessWebRTC(isHost: boolean, RTCConfig?: RTCConfiguratio
     const [localDescription, setLocalDescription] = useState<RTCSessionDescription>();
     const [remoteDescription, setRemoteDescription] = useState<RTCSessionDescription>();
 
-    const chatChannelRef = useRef<RTCDataChannel | null>(
-        isHost ? connection.createDataChannel('chat') : null
-    );
+    const offerRef = useRef<RTCSessionDescription>();
+
+    // const [onMessage, setOnMessage] = useState<(e: MessageEvent) => void>(defaultHandleMessage);
+
+    const createDataChannel = () => {
+        const dataChannel = connection.createDataChannel('chat');
+        dataChannel.onmessage = defaultHandleMessage;
+        return dataChannel;
+    };
+    const chatChannelRef = useRef<RTCDataChannel | null>(isHost ? createDataChannel() : null);
 
     const sendMessage = (message: string) => {
         const chatChannel = chatChannelRef.current;
         if (chatChannel) {
+            console.log(`Sending message ${message}`);
             chatChannel.send(message);
+        } else {
+            console.log(`There's no chatChannel at the moment?`);
         }
     };
 
@@ -53,6 +63,7 @@ export function useServerlessWebRTC(isHost: boolean, RTCConfig?: RTCConfiguratio
                   throw new Error('There was no sdp string in received offer?');
               }
 
+              console.log(`Client: Set remote description`);
               await connection.setRemoteDescription(receivedDescription);
               const newRemoteDescription = connection.remoteDescription;
 
@@ -60,25 +71,36 @@ export function useServerlessWebRTC(isHost: boolean, RTCConfig?: RTCConfiguratio
                   throw new Error("Remote description wasn't set for some reason");
               }
 
-              setRemoteDescription(newRemoteDescription);
+              //   setRemoteDescription(newRemoteDescription);
+              offerRef.current = receivedDescription;
 
               const newAnswer = await connection.createAnswer();
-              setLocalDescription(new RTCSessionDescription(newAnswer));
+              console.log(`Client: Set local description`);
+              await connection.setLocalDescription(newAnswer);
+
+              const newLocalDescription = connection.localDescription;
+
+              if (!newLocalDescription) {
+                  throw new Error('No local description?');
+              }
+
+              setLocalDescription(newLocalDescription);
           };
 
-    const [onMessage, setOnMessage] = useState<(e: MessageEvent) => void>(defaultHandleMessage);
-
-    useEffect(() => {
-        const chatChannel = chatChannelRef.current;
-        if (chatChannel) {
-            chatChannel.onmessage = onMessage;
-        }
-    }, [onMessage]);
+    // useEffect(() => {
+    //     const chatChannel = chatChannelRef.current;
+    //     if (chatChannel) {
+    //         chatChannel.onmessage = onMessage;
+    //     }
+    // }, [onMessage]);
 
     useEffect(() => {
         async function setUpHost() {
             console.log('[useServerlessWebRTC]: Setting up Host');
             connection.addEventListener('icegatheringstatechange', async () => {
+                console.log(
+                    `Ice candidate gathering state changed to ${connection.iceGatheringState}!`
+                );
                 switch (connection.iceGatheringState) {
                     case 'complete': {
                         const finalOffer = await connection.createOffer();
@@ -108,13 +130,16 @@ export function useServerlessWebRTC(isHost: boolean, RTCConfig?: RTCConfiguratio
             connection.createDataChannel('necessary');
 
             connection.addEventListener('icegatheringstatechange', async () => {
+                console.log(
+                    `Ice candidate gathering state changed to ${connection.iceGatheringState}!`
+                );
                 switch (connection.iceGatheringState) {
                     case 'complete': {
-                        if (!remoteDescription) {
+                        if (!offerRef.current) {
                             throw new Error("There's no remote offer?");
                         }
 
-                        connection.setRemoteDescription(remoteDescription);
+                        connection.setRemoteDescription(offerRef.current);
                         const answer = await connection.createAnswer();
                         await connection.setLocalDescription(answer);
                         const finalLocalDescription = connection.localDescription;
@@ -136,12 +161,6 @@ export function useServerlessWebRTC(isHost: boolean, RTCConfig?: RTCConfiguratio
             });
         }
 
-        connection.addEventListener('signalingstatechange', () => {
-            console.log(
-                `[serverlessWebRTC]: Set signalling state set to - ${connection.signalingState}`
-            );
-        });
-
         connection.addEventListener('icecandidate', e => {
             const { candidate } = e;
             if (candidate) {
@@ -151,13 +170,19 @@ export function useServerlessWebRTC(isHost: boolean, RTCConfig?: RTCConfiguratio
             }
         });
 
+        connection.addEventListener('signalingstatechange', () => {
+            console.log(
+                `[serverlessWebRTC]: Set signalling state set to - ${connection.signalingState}`
+            );
+        });
+
         isHost ? setUpHost() : setUpClient();
-    }, []);
+    }, [connection]);
 
     return {
         localDescription: localDescription ? JSON.stringify(localDescription) : undefined,
         remoteDescription: remoteDescription ? JSON.stringify(remoteDescription) : undefined,
-        setOnMessage,
+        // setOnMessage,
         sendMessage,
         handleRemoteDescription,
         logConnection,
