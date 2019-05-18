@@ -177,7 +177,7 @@ export function useServerlessWebRTC(isHost: boolean, RTCConfig?: RTCConfiguratio
         });
 
         isHost ? setUpHost() : setUpClient();
-    }, [connection]);
+    }, [connection, isHost]);
 
     return {
         localDescription: localDescription ? JSON.stringify(localDescription) : undefined,
