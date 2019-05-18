@@ -18,7 +18,9 @@ export function stringifyOffer(offer: RTCSessionDescriptionInit): string {
 export function deStringifyOffer(offer: string): RTCSessionDescription {
     const result = JSON.parse(offer) as unknown;
     if (!isRTCSessionDescriptionInit(result)) {
-        throw new Error('Did not get a RTCSessionDescriptionInit object. Are you sure you passed in the right string?');
+        throw new Error(
+            'Did not get a RTCSessionDescriptionInit object. Are you sure you passed in the right string?'
+        );
     }
     return new RTCSessionDescription(result);
 }

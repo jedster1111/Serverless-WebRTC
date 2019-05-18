@@ -1,4 +1,12 @@
-import React, { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react';
+import React, {
+    ChangeEvent,
+    Dispatch,
+    FC,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState
+} from 'react';
 import { createOffer } from '../webrtc/createOffer';
 import { handleNewICECandidate } from '../webrtc/handleNewICECandidate';
 import { setLocalDescription } from '../webrtc/setLocalDescription';
@@ -34,7 +42,9 @@ export const WebRTCHost: FC = () => {
         connection.addEventListener('icecandidate', event =>
             handleNewICECandidate(event, setCandidates, setIsGatheringICECandidates)
         );
-        connection.addEventListener('icegatheringstatechange', () => handleGatheringStateChange(connection, setOffer));
+        connection.addEventListener('icegatheringstatechange', () =>
+            handleGatheringStateChange(connection, setOffer)
+        );
         connection.addEventListener('signalingstatechange', () => {
             console.log(`[WebRTCHost]: Set signalling state set to - ${connection.signalingState}`);
         });
@@ -50,7 +60,8 @@ export const WebRTCHost: FC = () => {
             chatChannel.send('Hello world, from host!');
         }
     };
-    const handleAnswerInputChange = (e: ChangeEvent<HTMLInputElement>) => setAnswerInputValue(e.target.value);
+    const handleAnswerInputChange = (e: ChangeEvent<HTMLInputElement>) =>
+        setAnswerInputValue(e.target.value);
     const onEnterAnswerButtonClick = async () => {
         const receivedAnswer = deStringifyOffer(answerInputValue);
 
@@ -85,7 +96,9 @@ async function handleGatheringStateChange(
     setOffer: Dispatch<SetStateAction<RTCSessionDescriptionInit | undefined>>
 ) {
     console.log(
-        `[handleGatheringStateChange]: Ice candidate gathering state changed to ${connection.iceGatheringState}!`
+        `[handleGatheringStateChange]: Ice candidate gathering state changed to ${
+            connection.iceGatheringState
+        }!`
     );
     switch (connection.iceGatheringState) {
         case 'complete': {

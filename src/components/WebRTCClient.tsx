@@ -1,4 +1,12 @@
-import React, { ChangeEvent, Dispatch, FC, SetStateAction, useEffect, useRef, useState } from 'react';
+import React, {
+    ChangeEvent,
+    Dispatch,
+    FC,
+    SetStateAction,
+    useEffect,
+    useRef,
+    useState
+} from 'react';
 import { createAnswer } from '../webrtc/createAnswer';
 import { handleNewICECandidate } from '../webrtc/handleNewICECandidate';
 import { setLocalDescription } from '../webrtc/setLocalDescription';
@@ -26,7 +34,9 @@ export const WebRTCClient: FC = () => {
             handleGatheringStateChange(connection, setAnswer, offerRef.current)
         );
         connection.addEventListener('signalingstatechange', () => {
-            console.log(`[WebRTCClient]: Set signalling state set to - ${connection.signalingState}`);
+            console.log(
+                `[WebRTCClient]: Set signalling state set to - ${connection.signalingState}`
+            );
         });
         connection.addEventListener('datachannel', e => {
             console.log('Data channel event!', e);
@@ -37,7 +47,8 @@ export const WebRTCClient: FC = () => {
         });
     }, [connection]);
 
-    const handleOfferInputValueChange = (e: ChangeEvent<HTMLInputElement>) => setOfferInputValue(e.target.value);
+    const handleOfferInputValueChange = (e: ChangeEvent<HTMLInputElement>) =>
+        setOfferInputValue(e.target.value);
     const handleSendMessageClick = () => {
         chatChannelRef.current && chatChannelRef.current.send('Hello world from client');
     };
@@ -86,7 +97,9 @@ async function handleGatheringStateChange(
     offer: RTCSessionDescriptionInit | undefined
 ) {
     console.log(
-        `[handleGatheringStateChange]: Ice candidate gathering state changed to ${connection.iceGatheringState}!`
+        `[handleGatheringStateChange]: Ice candidate gathering state changed to ${
+            connection.iceGatheringState
+        }!`
     );
     switch (connection.iceGatheringState) {
         case 'complete': {
